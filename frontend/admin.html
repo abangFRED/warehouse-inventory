@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Inventory</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <h1>Admin Inventory</h1>
+
+  <section>
+    <h2>Tambah Barang Baru</h2>
+    <form id="item-form" enctype="multipart/form-data">
+      <input type="text" name="code" placeholder="Kode Barang (opsional)" /><br>
+      <input type="text" name="name" placeholder="Nama Barang" required /><br>
+      <input type="text" name="category" placeholder="Kategori" /><br>
+      <textarea name="description" placeholder="Deskripsi"></textarea><br>
+      <input type="number" name="quantity" placeholder="Stok Awal" /><br>
+      <select name="location_id" id="location-select">
+        <option value="">Pilih Lokasi</option>
+      </select><br>
+      <input type="file" name="image" accept="image/*" /><br>
+      <button type="submit">Simpan</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>List Barang</h2>
+    <input id="admin-search" type="text" placeholder="Cari barang..." />
+    <button id="admin-search-btn">Cari</button>
+    <div id="admin-items" class="items-grid"></div>
+  </section>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>
