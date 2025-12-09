@@ -1,8 +1,10 @@
-const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const multer = require('multer');
+const express = require('express');
 const cors = require('cors');
-const { db, initDb } = require('./db');
+const db = require('./db');
+
 
 const app = express();
 const PORT = process.env.PORT || 4000;
