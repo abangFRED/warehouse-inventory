@@ -1,10 +1,12 @@
 const API_BASE = 'http://localhost:4000/api';
+const API_BASE_URL = "https://warehouse-inventory-production-ed36.up.railway.app"; 
+// ganti pakai URL punyamu sendiri
 
 async function fetchItems(query = '') {
   const url = new URL(API_BASE + '/items');
   if (query) url.searchParams.set('query', query);
 
-  const res = await fetch(url);
+  const res = await fetch(`${API_BASE_URL}/api/items`);
   const data = await res.json();
   renderItems(data);
 }
