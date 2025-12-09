@@ -1,4 +1,4 @@
-const API_BASE_URL = "https://warehouse-inventory-production-ed36.up.railway.app"; 
+const API_BASE = "https://warehouse-inventory-production-ed36.up.railway.app"; 
 // ganti pakai URL punyamu sendiri
 
 async function fetchItems(query = '') {
