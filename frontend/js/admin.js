@@ -28,9 +28,17 @@ function renderAdminItems(items) {
   items.forEach(item => {
     const div = document.createElement('div');
     div.className = 'item-card';
+
+    // kalau di DB disimpan 'uploads/xxx.png'
+    const imageUrl = item.image_path 
+      ? `${API_BASE_URL}/uploads/${item.image_path}` 
+      : null;
+
     div.innerHTML = `
       <div class="item-image">
-        ${item.image_path ? `<img src="${item.image_path}" alt="${item.name}">` : '<div class="placeholder">No Image</div>'}
+        ${imageUrl 
+          ? `<img src="${imageUrl}" alt="${item.name}">` 
+          : '<div class="placeholder">No Image</div>'}
       </div>
       <div class="item-info">
         <strong>${item.name}</strong><br>
@@ -43,14 +51,8 @@ function renderAdminItems(items) {
     `;
     container.appendChild(div);
   });
-
-  container.querySelectorAll('.btn-in').forEach(btn => {
-    btn.addEventListener('click', () => updateStock(btn.dataset.id, 'IN'));
-  });
-  container.querySelectorAll('.btn-out').forEach(btn => {
-    btn.addEventListener('click', () => updateStock(btn.dataset.id, 'OUT'));
-  });
 }
+
 
 async function updateStock(id, type) {
   const qty = prompt(`Jumlah yang akan ${type === 'IN' ? 'ditambahkan' : 'dikurangi'}:`);
