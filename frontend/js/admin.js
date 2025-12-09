@@ -16,7 +16,7 @@ async function loadLocations() {
 async function fetchAdminItems(query = '') {
   const url = new URL(API_BASE + '/items');
   if (query) url.searchParams.set('query', query);
-  const res = await fetch(url);
+  const res = await fetch(`${API_BASE}/api/items`);
   const items = await res.json();
   renderAdminItems(items);
 }
