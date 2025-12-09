@@ -1,7 +1,7 @@
 const API_BASE_URL = "https://warehouse-inventory-production-ed36.up.railway.app";
 
 async function loadLocations() {
-  const res = await fetch(API_BASE + '/locations');
+  const res = await fetch(`${API_BASE_URL}/api/locations`);
   const locations = await res.json();
   const select = document.getElementById('location-select');
 
@@ -57,7 +57,7 @@ async function updateStock(id, type) {
   if (!qty) return;
   const note = prompt('Catatan (opsional):') || '';
 
-  await fetch(`${API_BASE}/items/${id}/stock`, {
+  await fetch(`${API_BASE_URL}/api/items/${id}/stock`, {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
