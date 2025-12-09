@@ -15,21 +15,25 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// folder upload foto
-const uploadDir = path.join(__dirname, '..', 'uploads');
-app.use('/uploads', express.static(uploadDir));
+// Pastikan folder uploads ada
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
+// Konfigurasi Multer
 const storage = multer.diskStorage({
-  destination: function (_, __, cb) {
+  destination: (req, file, cb) => {
     cb(null, uploadDir);
   },
-  filename: function (_, file, cb) {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, unique + ext);
+  filename: (req, file, cb) => {
+    const safeName = Date.now() + '-' + file.originalname.replace(/\s+/g, '_');
+    cb(null, safeName);
   }
 });
+
 const upload = multer({ storage });
+
 
 // ========== API ROUTES ==========
 
