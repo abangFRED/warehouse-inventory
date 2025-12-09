@@ -14,6 +14,7 @@ initDb();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Pastikan folder uploads ada
 const uploadDir = path.join(__dirname, '../uploads');
@@ -71,39 +72,53 @@ app.get('/api/items', (req, res) => {
 
 // POST /api/items  (tambah barang baru)
 app.post('/api/items', upload.single('image'), (req, res) => {
-  const { code, name, description, category, quantity, location_id } = req.body;
-  const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
+  try {
+    const { code, name, category, description, quantity, location_id } = req.body;
 
-  const sql = `
-    INSERT INTO items (code, name, description, category, image_path, quantity, location_id)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
-  `;
-  const params = [
-    code || null,
-    name,
-    description || null,
-    category || null,
-    imagePath,
-    quantity || 0,
-    location_id || null
-  ];
-
-  db.run(sql, params, function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-
-    // log stok masuk
-    const itemId = this.lastID;
-    if (quantity && Number(quantity) > 0) {
-      db.run(
-        `INSERT INTO stock_movements (item_id, type, quantity, note)
-         VALUES (?, 'IN', ?, 'Initial stock')`,
-        [itemId, quantity]
-      );
+    if (!name || !quantity) {
+      return res.status(400).json({ error: 'Name dan quantity wajib diisi' });
     }
 
-    res.status(201).json({ id: itemId, message: 'Item created' });
-  });
+    // kalau ada file, simpan path relatifnya
+    let imagePath = null;
+    if (req.file) {
+      // simpan dalam bentuk: uploads/namafile.png
+      imagePath = path.posix.join('uploads', req.file.filename);
+    }
+
+    const sql = `
+      INSERT INTO items (code, name, category, description, quantity, location_id, image_path)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    const params = [
+      code || null,
+      name,
+      category || null,
+      description || null,
+      Number(quantity) || 0,
+      location_id || null,
+      imagePath
+    ];
+
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error('ERROR INSERT ITEM:', err);
+        return res.status(500).json({ error: err.message });
+      }
+
+      res.json({
+        success: true,
+        id: this.lastID,
+        image_path: imagePath
+      });
+    });
+  } catch (err) {
+    console.error('UNEXPECTED ERROR /api/items:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
+
 
 // PATCH /api/items/:id/stock  (update stok)
 app.patch('/api/items/:id/stock', (req, res) => {
