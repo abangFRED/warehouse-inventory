@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:4000/api';
+const API_BASE_URL = "https://warehouse-inventory-production-ed36.up.railway.app/";
 
 async function loadLocations() {
   const res = await fetch(API_BASE + '/locations');
@@ -75,10 +75,11 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
   const form = e.target;
   const formData = new FormData(form);
 
-  await fetch(API_BASE + '/items', {
+  await fetch(`${API_BASE_URL}/api/items`, {
     method: 'POST',
     body: formData
-  });
+});
+
 
   form.reset();
   fetchAdminItems();
