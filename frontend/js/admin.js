@@ -1,4 +1,4 @@
-const API_BASE = "https://warehouse-inventory-production-ed36.up.railway.app/";
+const API_BASE = "https://warehouse-inventory-production-ed36.up.railway.app";
 
 async function loadLocations() {
   const res = await fetch(API_BASE + '/locations');
