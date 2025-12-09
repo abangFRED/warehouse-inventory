@@ -20,7 +20,7 @@ function renderAdminItems(items) {
 
     // kalau di DB disimpan 'uploads/xxx.png'
     const imageUrl = item.image_path 
-      ? `${API_BASE_URL}/${item.image_path}` 
+      ? `${API_BASE_URL}/uploads/${item.image_path}` 
       : null;
 
     div.innerHTML = `
