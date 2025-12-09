@@ -10,34 +10,38 @@ async function fetchItems(query = '') {
   renderItems(data);
 }
 
-function renderItems(items) {
-  const container = document.getElementById('items-container');
+function renderAdminItems(items) {
+  const container = document.getElementById('admin-items');
   container.innerHTML = '';
-
-  if (!items.length) {
-    container.innerHTML = '<p>Tidak ada barang.</p>';
-    return;
-  }
 
   items.forEach(item => {
     const div = document.createElement('div');
     div.className = 'item-card';
 
+    // kalau di DB disimpan 'uploads/xxx.png'
+    const imageUrl = item.image_path 
+      ? `${API_BASE_URL}/${item.image_path}` 
+      : null;
+
     div.innerHTML = `
       <div class="item-image">
-        ${item.image_path ? `<img src="${item.image_path}" alt="${item.name}">` : '<div class="placeholder">No Image</div>'}
+        ${imageUrl 
+          ? `<img src="${imageUrl}" alt="${item.name}">` 
+          : '<div class="placeholder">No Image</div>'}
       </div>
       <div class="item-info">
         <strong>${item.name}</strong><br>
         <small>Kode: ${item.code || '-'}</small><br>
-        <small>Kategori: ${item.category || '-'}</small><br>
         <small>Stok: ${item.quantity}</small><br>
-        <small>Lokasi: ${item.location_name || '-'}</small>
+        <small>Lokasi: ${item.location_name || '-'}</small><br>
+        <button data-id="${item.id}" class="btn-in">+ Stok</button>
+        <button data-id="${item.id}" class="btn-out">- Stok</button>
       </div>
     `;
     container.appendChild(div);
   });
 }
+
 
 document.getElementById('search-btn').addEventListener('click', () => {
   const q = document.getElementById('search-input').value.trim();
